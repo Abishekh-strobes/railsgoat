@@ -3,6 +3,13 @@
 
 # Your secret key for verifying the integrity of signed cookies.
 # If you change this key, all old signed cookies will become invalid!
-# Make sure the secret is at least 30 characters and all random,
-# no regular words or you'll be exposed to dictionary attacks.
-Railsgoat::Application.config.secret_key_base = "2f1d90a26236c3245d96f5606c201a780dc9ca687e5ed82b45e211bb5dc84c1870f61ca9e002dad5dd8a149c9792d8f07f31a9575065cca064bd6af44f8750e4"
+# The secret is read from the SECRET_KEY_BASE environment variable so that it is
+# never committed to source control. In development and test a random key is
+# generated at boot, which means signed cookies do not survive a restart.
+Railsgoat::Application.config.secret_key_base = ENV.fetch("SECRET_KEY_BASE") do
+  if Rails.env.production?
+    raise "SECRET_KEY_BASE environment variable must be set in production"
+  end
+
+  SecureRandom.hex(64)
+end
