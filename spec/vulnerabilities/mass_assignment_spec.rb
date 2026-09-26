@@ -24,12 +24,14 @@ feature "mass assignment" do
   end
 
   scenario "attack two, Tutorial: https://github.com/OWASP/railsgoat/wiki/R4-Extras-Mass-Assignment-Admin-Role" do
+    password = SecureRandom.hex(12)
+
     params = { user: {  admin: "t",
                         email: "hackety@h4x0rs.c0m",
                         first_name: "hackety",
                         last_name: "hax",
-                        password: "foobarewe",
-                        password_confirmation: "foobarewe" }}
+                        password: password,
+                        password_confirmation: password }}
 
     page.driver.post "/users", params
 
